@@ -1,9 +1,11 @@
-use axum::{routing::IntoMakeService, Router};
+use axum::Router;
+use tower_http::normalize_path::{NormalizePath, NormalizePathLayer};
+use tower_layer::Layer;
 
 use super::random_route;
 
-pub fn routes() -> IntoMakeService<Router> {
+pub fn routes() -> NormalizePath<Router> {
     let app_router = Router::new().nest("/api", random_route::routes());
 
-    app_router.into_make_service()
+    NormalizePathLayer::trim_trailing_slash().layer(app_router)
 }

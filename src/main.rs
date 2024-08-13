@@ -4,6 +4,7 @@ mod utils;
 
 use std::env;
 
+use axum::{extract, ServiceExt};
 use dotenvy::dotenv;
 use tokio::net::TcpListener;
 
@@ -21,7 +22,12 @@ async fn main() {
         .unwrap();
 
     println!("Server is running on {}:{}", host, port);
-    axum::serve(listener, routes).await.unwrap();
+    axum::serve(
+        listener,
+        ServiceExt::<extract::Request>::into_make_service(routes),
+    )
+    .await
+    .unwrap();
 }
 
 fn env() -> (String, String) {
