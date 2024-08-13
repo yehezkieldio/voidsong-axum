@@ -1,0 +1,20 @@
+cargo-features = ["codegen-backend"]
+
+[profile.dev]
+codegen-backend = "cranelift"
+incremental = true
+opt-level = 0
+debug = true
+
+[package]
+name = "voidsong"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+axum = "0.7.5"
+dotenvy = "0.15.7"
+tokio = { version = "1.39.2", features = ["full"] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
