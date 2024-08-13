@@ -1,19 +1,14 @@
 mod handlers;
 mod routes;
+mod utils;
 
 use std::env;
 
 use dotenvy::dotenv;
-use serde::{Deserialize, Serialize};
 use tokio::net::TcpListener;
 
 const SERVER_HOST: &str = "0.0.0.0";
 const SERVER_PORT: &str = "8080";
-
-#[derive(Serialize, Deserialize)]
-struct VoidsongError {
-    message: String,
-}
 
 #[tokio::main]
 async fn main() {
