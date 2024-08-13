@@ -1378,6 +1378,8 @@ dependencies = [
  "axum",
  "dotenvy",
  "reqwest",
+ "serde",
+ "serde_json",
  "tokio",
  "tracing",
  "tracing-subscriber",
