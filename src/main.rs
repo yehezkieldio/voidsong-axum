@@ -1,6 +1,8 @@
+mod handlers;
+mod routes;
+
 use std::env;
 
-use axum::Router;
 use dotenvy::dotenv;
 use tokio::net::TcpListener;
 
@@ -12,13 +14,13 @@ async fn main() {
     tracing_subscriber::fmt::init();
     let (host, port) = env();
 
-    let app: Router = Router::new().route("/", axum::routing::get(|| async { "Hello, world!" }));
+    let routes = routes::root::routes();
     let listener: TcpListener = tokio::net::TcpListener::bind(format!("{}:{}", host, port))
         .await
         .unwrap();
 
     println!("Server is running on {}:{}", host, port);
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(listener, routes).await.unwrap();
 }
 
 fn env() -> (String, String) {
