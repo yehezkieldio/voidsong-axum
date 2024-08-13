@@ -1,23 +1,11 @@
 use axum::response::IntoResponse;
-use reqwest::{header, Client, StatusCode};
-use serde::{Deserialize, Serialize};
-
-#[derive(Serialize, Deserialize)]
-struct CatResponse {
-    _id: String,
-}
+use reqwest::{header, Client, Error, Response as ReqwestResponse, StatusCode};
 
 pub async fn get_random_cat() -> Result<impl IntoResponse, impl IntoResponse> {
-    let client = Client::new();
-    let url = "https://cataas.com/cat?json=true";
+    let client: Client = Client::new();
+    let url: &str = "https://cataas.com/cat";
 
-    let result = client.get(url).send().await;
-    let data = result.unwrap().json::<CatResponse>().await.unwrap();
-
-    let result = client
-        .get("https://cataas.com/cat/".to_string() + &data._id)
-        .send()
-        .await;
+    let result: Result<ReqwestResponse, Error> = client.get(url).send().await;
 
     match result {
         Ok(res) => {
