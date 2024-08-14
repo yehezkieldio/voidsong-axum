@@ -1,10 +1,9 @@
 use reqwest::Client;
-use tokio::sync::MutexGuard;
 
 use super::{response::VoidsongImage, state::user_agent};
 
 pub async fn preflight_check<'a>(
-    client: &MutexGuard<'a, Client>,
+    client: &'a Client,
     urls: Vec<&'a str>,
 ) -> (bool, Option<&'a str>) {
     for url in urls {
@@ -22,7 +21,7 @@ pub async fn preflight_check<'a>(
     (false, None)
 }
 
-pub async fn fetch_image<'a>(client: MutexGuard<'a, Client>, url: &str) -> Option<VoidsongImage> {
+pub async fn fetch_image<'a>(client: &'a Client, url: &str) -> Option<VoidsongImage> {
     let response = client.get(url).headers(user_agent()).send().await;
 
     match response {

@@ -1,15 +1,12 @@
 use axum::extract::State;
 use reqwest::{Client, Response};
 use serde::Deserialize;
-use tokio::sync::MutexGuard;
 
 use crate::utils::{
     response::{VoidsongError, VoidsongImage},
     state::{user_agent, AppState},
     url::{fetch_image, preflight_check},
 };
-
-// vec!["https://cataas.com/cat?json=true", "https://api.thecatapi.com/v1/images/search"];
 
 #[derive(Deserialize)]
 struct CatAsService {
@@ -26,7 +23,7 @@ pub async fn get_random_cat(State(state): State<AppState>) -> Result<VoidsongIma
         "https://cataas.com/cat?json=true",
         "https://api.thecatapi.com/v1/images/search",
     ];
-    let client: MutexGuard<Client> = state.client.lock().await;
+    let client: Client = state.client;
 
     // Check if the APIs are available
     let (success, url) = preflight_check(&client, urls).await;
@@ -54,7 +51,7 @@ pub async fn get_random_cat(State(state): State<AppState>) -> Result<VoidsongIma
         _ => return Err(VoidsongError::FailedToFetchImage),
     };
 
-    let image: Option<VoidsongImage> = fetch_image(client, url.as_str()).await;
+    let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
 
@@ -65,7 +62,7 @@ struct DogCEO {
 
 pub async fn get_random_dog(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
     let urls: Vec<&str> = vec!["https://dog.ceo/api/breeds/image/random"];
-    let client: MutexGuard<Client> = state.client.lock().await;
+    let client: Client = state.client;
 
     // Check if the APIs are available
     let (success, url) = preflight_check(&client, urls).await;
@@ -84,6 +81,6 @@ pub async fn get_random_dog(State(state): State<AppState>) -> Result<VoidsongIma
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
 
-    let image: Option<VoidsongImage> = fetch_image(client, url.as_str()).await;
+    let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
