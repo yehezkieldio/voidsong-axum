@@ -2,10 +2,10 @@ use axum::{routing::get, Router};
 
 use crate::handlers::random_handler;
 
-pub fn routes() -> Router {
+pub fn animal() -> Router {
     let router = Router::new()
-        .route("/cats", get(random_handler::get_random_cat))
-        .route("/dogs", get(random_handler::get_random_dog));
+        .route("/cat", get(random_handler::get_random_cat))
+        .route("/dog", get(random_handler::get_random_dog));
 
     router
 }
