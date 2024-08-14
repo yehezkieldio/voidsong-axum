@@ -5,7 +5,7 @@ use tower_layer::Layer;
 use super::random_route;
 
 pub fn routes() -> NormalizePath<Router> {
-    let app_router = Router::new().nest("/animal", random_route::animal());
+    let app_router = Router::new().nest("/random", random_route::routes());
 
     NormalizePathLayer::trim_trailing_slash().layer(app_router)
 }
