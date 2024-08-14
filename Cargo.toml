@@ -6,6 +6,10 @@ incremental = true
 opt-level = 0
 debug = true
 
+[[bin]]
+name = "voidsong"
+path = "src/main.rs"
+
 [package]
 name = "voidsong"
 version = "0.1.0"
