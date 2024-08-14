@@ -15,7 +15,9 @@ async fn main() {
         .await
         .unwrap();
 
-    tracing::info!("Server running on http://{}:{}", host, port);
+    tracing::info!("Version {}", voidsong::env::VERSION);
+    tracing::info!("Running on http://{}:{}", host, port);
+
     axum::serve(
         listener,
         ServiceExt::<extract::Request>::into_make_service(routes),

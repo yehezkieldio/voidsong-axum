@@ -4,6 +4,7 @@ use dotenvy::dotenv;
 
 const SERVER_HOST: &str = "0.0.0.0";
 const SERVER_PORT: &str = "8080";
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub fn load() -> (String, String) {
     let _ = dotenv();
