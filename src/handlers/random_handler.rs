@@ -1,11 +1,14 @@
-use axum::response::IntoResponse;
+use axum::{extract::State, response::IntoResponse};
 use reqwest::{header, Client, Error, Response as ReqwestResponse, StatusCode};
 use serde::Deserialize;
+use tokio::sync::MutexGuard;
 
-use crate::utils::error::json_error;
+use crate::utils::{error::json_error, state::AppState};
 
-async fn fetch_image(url: &str) -> Result<impl IntoResponse, impl IntoResponse> {
-    let client = Client::new();
+async fn fetch_image<'a>(
+    client: MutexGuard<'a, Client>,
+    url: &str,
+) -> Result<impl IntoResponse, impl IntoResponse> {
     let response = client.get(url).send().await;
 
     match response {
@@ -29,10 +32,13 @@ async fn fetch_image(url: &str) -> Result<impl IntoResponse, impl IntoResponse> 
     }
 }
 
-pub async fn get_random_cat() -> Result<impl IntoResponse, impl IntoResponse> {
+pub async fn get_random_cat(
+    State(state): State<AppState>,
+) -> Result<impl IntoResponse, impl IntoResponse> {
     let url: &str = "https://cataas.com/cat";
+    let client = state.client.lock().await;
 
-    fetch_image(url).await
+    fetch_image(client, url).await
 }
 
 #[derive(Deserialize)]
@@ -40,12 +46,14 @@ struct DogResponse {
     message: String,
 }
 
-pub async fn get_random_dog() -> Result<impl IntoResponse, impl IntoResponse> {
+pub async fn get_random_dog(
+    State(state): State<AppState>,
+) -> Result<impl IntoResponse, impl IntoResponse> {
     let url: &str = "https://dog.ceo/api/breeds/image/random";
+    let client = state.client.lock().await;
 
-    let client: Client = Client::new();
     let result: Result<ReqwestResponse, Error> = client.get(url).send().await;
     let data: DogResponse = result.unwrap().json::<DogResponse>().await.unwrap();
 
-    fetch_image(&data.message).await
+    fetch_image(client, &data.message).await
 }
