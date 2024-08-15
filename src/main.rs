@@ -1,27 +1,38 @@
-use axum::{extract, ServiceExt};
+use axum::{extract, routing::IntoMakeService, Router, ServiceExt};
 use tokio::net::TcpListener;
 
-#[tokio::main]
-async fn main() {
+async fn init_tracing() {
     tracing_subscriber::fmt()
         .with_target(false)
         .compact()
         .init();
+}
 
-    let (host, port) = voidsong::env::load();
-
+async fn setup_server(
+    host: &str,
+    port: &str,
+) -> (
+    IntoMakeService<tower_http::normalize_path::NormalizePath<Router>>,
+    tokio::net::TcpListener,
+) {
     let routes = voidsong::routes::root::routes();
+    let app = ServiceExt::<extract::Request>::into_make_service(routes);
     let listener: TcpListener = tokio::net::TcpListener::bind(format!("{}:{}", host, port))
         .await
         .unwrap();
 
-    tracing::info!("Version {}", voidsong::env::VERSION);
-    tracing::info!("Running on http://{}:{}", host, port);
+    (app, listener)
+}
 
-    axum::serve(
-        listener,
-        ServiceExt::<extract::Request>::into_make_service(routes),
-    )
-    .await
-    .unwrap();
+#[tokio::main]
+async fn main() {
+    init_tracing().await;
+
+    let (host, port) = voidsong::env::load();
+    let (app, listener) = setup_server(&host, &port).await;
+
+    tracing::info!("Running Voidsong v{}", voidsong::env::VERSION);
+    tracing::info!("Listening on http://{}:{}", host, port);
+
+    axum::serve(listener, app).await.unwrap();
 }
