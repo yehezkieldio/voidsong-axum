@@ -1,6 +1,9 @@
-use reqwest::Client;
+use std::pin::Pin;
 
 use super::{response::VoidsongImage, state::user_agent};
+use bytes::Bytes;
+use futures_util::{Stream, StreamExt};
+use reqwest::Client;
 
 pub async fn preflight_check<'a>(
     client: &'a Client,
@@ -34,15 +37,13 @@ pub async fn fetch_image<'a>(client: &'a Client, url: &str) -> Option<VoidsongIm
                     .unwrap_or("image/jpeg")
                     .to_string();
 
-                let bytes = response.bytes().await;
+                let stream: Pin<Box<dyn Stream<Item = Result<Bytes, reqwest::Error>> + Send>> =
+                    response.bytes_stream().boxed();
 
-                match bytes {
-                    Ok(bytes) => Some(VoidsongImage {
-                        content_type,
-                        bytes: bytes.to_vec(),
-                    }),
-                    Err(_) => None,
-                }
+                Some(VoidsongImage {
+                    content_type,
+                    stream,
+                })
             } else {
                 None
             }

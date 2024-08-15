@@ -1,8 +1,8 @@
 use axum::routing::get;
 use axum::Router;
 
-use crate::handlers::random_handler;
-use crate::utils::state::AppState;
+// use crate::handlers::random_handler;
+use crate::{handlers::random_handler, utils::state::AppState};
 
 pub fn routes() -> Router {
     let state: AppState = AppState::new();

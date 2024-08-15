@@ -1,5 +1,10 @@
+use std::pin::Pin;
+
+use axum::body::Body;
 use axum::http::{header, HeaderName, StatusCode};
 use axum::response::{IntoResponse, Response};
+use bytes::Bytes;
+use futures_util::Stream;
 
 use crate::env::VERSION;
 
@@ -26,7 +31,7 @@ impl IntoResponse for VoidsongError {
 
 pub struct VoidsongImage {
     pub content_type: String,
-    pub bytes: Vec<u8>,
+    pub stream: Pin<Box<dyn Stream<Item = Result<Bytes, reqwest::Error>> + Send>>,
 }
 
 impl IntoResponse for VoidsongImage {
@@ -37,6 +42,8 @@ impl IntoResponse for VoidsongImage {
             (HeaderName::from_static("x-voidsong-version"), VERSION),
         ];
 
-        (StatusCode::OK, headers, self.bytes).into_response()
+        let stream = Body::from_stream(self.stream);
+
+        (StatusCode::OK, headers, stream).into_response()
     }
 }

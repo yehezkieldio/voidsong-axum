@@ -18,11 +18,15 @@ publish = false
 
 [dependencies]
 axum = "0.7.5"
+axum-streams = "0.18.0"
+bytes = "1.7.1"
 dotenvy = "0.15.7"
-reqwest = { version = "0.12.5", features = ["json"] }
+futures-util = "0.3.30"
+reqwest = { version = "0.12.5", features = ["json", "stream"] }
 serde = { version = "1.0.207", features = ["derive"] }
 serde_json = "1.0.124"
 tokio = { version = "1.39.2", features = ["full"] }
+tokio-stream = "0.1.15"
 tower-http = { version = "0.5.2", features = ["normalize-path", "trace"] }
 tower-layer = "0.3.3"
 tracing = "0.1.40"
