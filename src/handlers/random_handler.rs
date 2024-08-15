@@ -84,3 +84,33 @@ pub async fn get_random_dog(State(state): State<AppState>) -> Result<VoidsongIma
     let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
+
+#[derive(Deserialize)]
+struct RandomFox {
+    image: String,
+}
+
+pub async fn get_random_fox(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
+    let urls: Vec<&str> = vec!["https://randomfox.ca/floof"];
+    let client: Client = state.client;
+
+    // Check if the APIs are available
+    let (success, url) = preflight_check(&client, urls).await;
+    if !success {
+        return Err(VoidsongError::ServiceUnavailable);
+    }
+
+    // Get the image URL
+    let get_url: Response = match client.get(url.unwrap()).headers(user_agent()).send().await {
+        Ok(response) => response,
+        Err(_) => return Err(VoidsongError::FailedToFetchImage),
+    };
+
+    let url: String = match get_url.json::<RandomFox>().await {
+        Ok(response) => response.image,
+        Err(_) => return Err(VoidsongError::FailedToFetchImage),
+    };
+
+    let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
+    image.ok_or(VoidsongError::FailedToFetchImage)
+}
