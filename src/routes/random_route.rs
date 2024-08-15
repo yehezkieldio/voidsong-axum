@@ -1,7 +1,6 @@
 use axum::routing::get;
 use axum::Router;
 
-// use crate::handlers::random_handler;
 use crate::{handlers::random_handler, utils::state::AppState};
 
 pub fn routes() -> Router {
