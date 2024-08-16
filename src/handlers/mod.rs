@@ -1,1 +1,1 @@
-pub mod random_handler;
+pub mod random_image_handler;
