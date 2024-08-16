@@ -5,6 +5,7 @@ use axum::http::{header, HeaderName, StatusCode};
 use axum::response::{IntoResponse, Response};
 use bytes::Bytes;
 use futures_util::Stream;
+use serde::Serialize;
 
 use crate::env::VERSION;
 
@@ -26,6 +27,25 @@ impl IntoResponse for VoidsongError {
         };
 
         (StatusCode::SERVICE_UNAVAILABLE, headers, body).into_response()
+    }
+}
+
+#[derive(Serialize)]
+pub struct VoidsongFact {
+    pub fact: String,
+}
+
+impl IntoResponse for VoidsongFact {
+    fn into_response(self) -> Response {
+        let headers = [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "no-cache"),
+            (HeaderName::from_static("x-voidsong-version"), VERSION),
+        ];
+
+        let body = serde_json::to_string(&self).unwrap();
+
+        (StatusCode::OK, headers, body).into_response()
     }
 }
 
