@@ -55,6 +55,8 @@ pub async fn get_random_cat(State(state): State<AppState>) -> Result<VoidsongIma
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
 
+/* -------------------------------------------------------------------------- */
+
 #[derive(Deserialize)]
 struct DogCEO {
     message: String,
@@ -84,6 +86,8 @@ pub async fn get_random_dog(State(state): State<AppState>) -> Result<VoidsongIma
     let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
+
+/* -------------------------------------------------------------------------- */
 
 #[derive(Deserialize)]
 struct RandomFox {
@@ -115,8 +119,10 @@ pub async fn get_random_fox(State(state): State<AppState>) -> Result<VoidsongIma
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
 
+/* -------------------------------------------------------------------------- */
+
 #[derive(Deserialize)]
-struct RandomBunny {
+struct BunniesIo {
     pub media: Media,
 }
 
@@ -143,7 +149,7 @@ pub async fn get_random_bunny(
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
 
-    let url: String = match get_url.json::<RandomBunny>().await {
+    let url: String = match get_url.json::<BunniesIo>().await {
         Ok(response) => response.media.poster,
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
