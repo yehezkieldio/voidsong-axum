@@ -18,7 +18,7 @@ struct TheCatAPI {
     url: String,
 }
 
-pub async fn get_random_cat(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
+pub async fn cat(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
     let urls: Vec<&str> = vec![
         "https://cataas.com/cat?json=true",
         "https://api.thecatapi.com/v1/images/search",
@@ -62,7 +62,7 @@ struct DogCEO {
     message: String,
 }
 
-pub async fn get_random_dog(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
+pub async fn dog(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
     let urls: Vec<&str> = vec!["https://dog.ceo/api/breeds/image/random"];
     let client: Client = state.client;
 
@@ -94,7 +94,7 @@ struct RandomFox {
     image: String,
 }
 
-pub async fn get_random_fox(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
+pub async fn fox(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
     let urls: Vec<&str> = vec!["https://randomfox.ca/floof"];
     let client: Client = state.client;
 
@@ -131,9 +131,7 @@ struct Media {
     pub poster: String,
 }
 
-pub async fn get_random_bunny(
-    State(state): State<AppState>,
-) -> Result<VoidsongImage, VoidsongError> {
+pub async fn bunny(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
     let urls: Vec<&str> = vec!["https://api.bunnies.io/v2/loop/random/?media=gif,png"];
     let client: Client = state.client;
 
@@ -165,9 +163,7 @@ struct RandomDuck {
     url: String,
 }
 
-pub async fn get_random_duck(
-    State(state): State<AppState>,
-) -> Result<VoidsongImage, VoidsongError> {
+pub async fn duck(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
     let urls: Vec<&str> = vec!["https://random-d.uk/api/v1/random?type=png"];
     let client: Client = state.client;
 
