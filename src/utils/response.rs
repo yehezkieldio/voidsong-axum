@@ -13,6 +13,7 @@ pub enum VoidsongError {
     FailedToFetchImage,
     FailedToFetchFact,
     ServiceUnavailable,
+    InvalidRoute,
 }
 
 impl IntoResponse for VoidsongError {
@@ -22,13 +23,25 @@ impl IntoResponse for VoidsongError {
             (HeaderName::from_static("x-voidsong-version"), VERSION),
         ];
 
-        let body = match self {
-            VoidsongError::FailedToFetchImage => "failed to fetch image data",
-            VoidsongError::FailedToFetchFact => "failed to fetch fact data",
-            VoidsongError::ServiceUnavailable => "service unavailable",
+        let (status, body) = match self {
+            VoidsongError::FailedToFetchImage => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "failed to fetch image data",
+            ),
+            VoidsongError::FailedToFetchFact => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "failed to fetch fact data",
+            ),
+            VoidsongError::ServiceUnavailable => {
+                (StatusCode::SERVICE_UNAVAILABLE, "service unavailable")
+            }
+            VoidsongError::InvalidRoute => (
+                StatusCode::NOT_FOUND,
+                "invalid route accessed for this path",
+            ),
         };
 
-        (StatusCode::SERVICE_UNAVAILABLE, headers, body).into_response()
+        (status, headers, body).into_response()
     }
 }
 

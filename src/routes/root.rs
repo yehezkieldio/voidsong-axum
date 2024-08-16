@@ -7,11 +7,14 @@ use tower_http::{
 use tower_layer::Layer;
 use tracing::Level;
 
+use crate::utils::response::VoidsongError;
+
 use super::random_route;
 
 pub fn routes() -> NormalizePath<Router> {
     let app_router = Router::new()
         .nest("/random", random_route::routes())
+        .fallback(handler_404)
         .layer(
             TraceLayer::new_for_http()
                 .make_span_with(trace::DefaultMakeSpan::new().level(Level::INFO))
@@ -20,4 +23,8 @@ pub fn routes() -> NormalizePath<Router> {
         .layer(CompressionLayer::new());
 
     NormalizePathLayer::trim_trailing_slash().layer(app_router)
+}
+
+async fn handler_404() -> VoidsongError {
+    VoidsongError::InvalidRoute
 }
