@@ -10,8 +10,9 @@ pub fn routes() -> Router {
     let state: AppState = AppState::new();
 
     let trivia = Router::new()
-        .route("/cat", get(random_trivia_handler::cat_fact))
-        .route("/dog", get(random_trivia_handler::dog_fact))
+        .route("/fact", get(random_trivia_handler::fact))
+        .route("/catfact", get(random_trivia_handler::cat_fact))
+        .route("/dogfact", get(random_trivia_handler::dog_fact))
         .with_state(state.clone());
 
     let humor = Router::new()
