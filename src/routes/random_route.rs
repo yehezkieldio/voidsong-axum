@@ -11,6 +11,7 @@ pub fn routes() -> Router {
         .route("/dog", get(random_handler::get_random_dog))
         .route("/fox", get(random_handler::get_random_fox))
         .route("/bunny", get(random_handler::get_random_bunny))
+        .route("/duck", get(random_handler::get_random_duck))
         .with_state(state);
 
     let router: Router = Router::new().nest("/animal", animals);

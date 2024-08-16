@@ -157,3 +157,37 @@ pub async fn get_random_bunny(
     let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
+
+/* -------------------------------------------------------------------------- */
+
+#[derive(Deserialize)]
+struct RandomDuck {
+    url: String,
+}
+
+pub async fn get_random_duck(
+    State(state): State<AppState>,
+) -> Result<VoidsongImage, VoidsongError> {
+    let urls: Vec<&str> = vec!["https://random-d.uk/api/v1/random?type=png"];
+    let client: Client = state.client;
+
+    // Check if the APIs are available
+    let (success, url) = preflight_check(&client, urls).await;
+    if !success {
+        return Err(VoidsongError::ServiceUnavailable);
+    }
+
+    // Get the image URL
+    let get_url: Response = match client.get(url.unwrap()).headers(user_agent()).send().await {
+        Ok(response) => response,
+        Err(_) => return Err(VoidsongError::FailedToFetchImage),
+    };
+
+    let url: String = match get_url.json::<RandomDuck>().await {
+        Ok(response) => response.url,
+        Err(_) => return Err(VoidsongError::FailedToFetchImage),
+    };
+
+    let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
+    image.ok_or(VoidsongError::FailedToFetchImage)
+}
