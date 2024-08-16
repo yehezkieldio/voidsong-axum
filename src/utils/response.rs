@@ -11,6 +11,7 @@ use crate::env::VERSION;
 
 pub enum VoidsongError {
     FailedToFetchImage,
+    FailedToFetchFact,
     ServiceUnavailable,
 }
 
@@ -23,6 +24,7 @@ impl IntoResponse for VoidsongError {
 
         let body = match self {
             VoidsongError::FailedToFetchImage => "failed to fetch image data",
+            VoidsongError::FailedToFetchFact => "failed to fetch fact data",
             VoidsongError::ServiceUnavailable => "service unavailable",
         };
 
