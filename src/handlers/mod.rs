@@ -1,2 +1,3 @@
-pub mod random_fact_handler;
-pub mod random_image_handler;
+pub mod random_humor_handler;
+pub mod random_media_handler;
+pub mod random_trivia_handler;

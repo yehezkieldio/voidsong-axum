@@ -32,12 +32,14 @@ impl IntoResponse for VoidsongError {
     }
 }
 
+/* -------------------------------------------------------------------------- */
+
 #[derive(Serialize)]
-pub struct VoidsongFact {
-    pub fact: String,
+pub struct VoidsongHumor {
+    pub joke: String,
 }
 
-impl IntoResponse for VoidsongFact {
+impl IntoResponse for VoidsongHumor {
     fn into_response(self) -> Response {
         let headers = [
             (header::CONTENT_TYPE, "application/json"),
@@ -50,6 +52,29 @@ impl IntoResponse for VoidsongFact {
         (StatusCode::OK, headers, body).into_response()
     }
 }
+
+/* -------------------------------------------------------------------------- */
+
+#[derive(Serialize)]
+pub struct VoidsongTrivia {
+    pub fact: String,
+}
+
+impl IntoResponse for VoidsongTrivia {
+    fn into_response(self) -> Response {
+        let headers = [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "no-cache"),
+            (HeaderName::from_static("x-voidsong-version"), VERSION),
+        ];
+
+        let body = serde_json::to_string(&self).unwrap();
+
+        (StatusCode::OK, headers, body).into_response()
+    }
+}
+
+/* -------------------------------------------------------------------------- */
 
 pub struct VoidsongImage {
     pub content_type: String,
