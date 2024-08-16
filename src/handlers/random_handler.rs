@@ -114,3 +114,40 @@ pub async fn get_random_fox(State(state): State<AppState>) -> Result<VoidsongIma
     let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
+
+#[derive(Deserialize)]
+struct RandomBunny {
+    pub media: Media,
+}
+
+#[derive(Deserialize)]
+struct Media {
+    pub poster: String,
+}
+
+pub async fn get_random_bunny(
+    State(state): State<AppState>,
+) -> Result<VoidsongImage, VoidsongError> {
+    let urls: Vec<&str> = vec!["https://api.bunnies.io/v2/loop/random/?media=gif,png"];
+    let client: Client = state.client;
+
+    // Check if the APIs are available
+    let (success, url) = preflight_check(&client, urls).await;
+    if !success {
+        return Err(VoidsongError::ServiceUnavailable);
+    }
+
+    // Get the image URL
+    let get_url: Response = match client.get(url.unwrap()).headers(user_agent()).send().await {
+        Ok(response) => response,
+        Err(_) => return Err(VoidsongError::FailedToFetchImage),
+    };
+
+    let url: String = match get_url.json::<RandomBunny>().await {
+        Ok(response) => response.media.poster,
+        Err(_) => return Err(VoidsongError::FailedToFetchImage),
+    };
+
+    let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
+    image.ok_or(VoidsongError::FailedToFetchImage)
+}
