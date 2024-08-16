@@ -1,5 +1,5 @@
 use axum::extract::State;
-use reqwest::{Client, Response};
+use reqwest::Response;
 use serde::Deserialize;
 
 use crate::utils::{
@@ -23,16 +23,21 @@ pub async fn cat(State(state): State<AppState>) -> Result<VoidsongImage, Voidson
         "https://cataas.com/cat?json=true",
         "https://api.thecatapi.com/v1/images/search",
     ];
-    let client: Client = state.client;
 
     // Check if the APIs are available
-    let (success, url) = preflight_check(&client, urls).await;
+    let (success, url) = preflight_check(&state.client, urls).await;
     if !success {
         return Err(VoidsongError::ServiceUnavailable);
     }
 
     // Get the image URL
-    let get_url: Response = match client.get(url.unwrap()).headers(user_agent()).send().await {
+    let get_url: Response = match state
+        .client
+        .get(url.unwrap())
+        .headers(user_agent())
+        .send()
+        .await
+    {
         Ok(response) => response,
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
@@ -51,7 +56,7 @@ pub async fn cat(State(state): State<AppState>) -> Result<VoidsongImage, Voidson
         _ => return Err(VoidsongError::FailedToFetchImage),
     };
 
-    let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
+    let image: Option<VoidsongImage> = fetch_image(&state.client, url.as_str()).await;
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
 
@@ -64,16 +69,21 @@ struct DogCEO {
 
 pub async fn dog(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
     let urls: Vec<&str> = vec!["https://dog.ceo/api/breeds/image/random"];
-    let client: Client = state.client;
 
     // Check if the APIs are available
-    let (success, url) = preflight_check(&client, urls).await;
+    let (success, url) = preflight_check(&state.client, urls).await;
     if !success {
         return Err(VoidsongError::ServiceUnavailable);
     }
 
     // Get the image URL
-    let get_url: Response = match client.get(url.unwrap()).headers(user_agent()).send().await {
+    let get_url: Response = match state
+        .client
+        .get(url.unwrap())
+        .headers(user_agent())
+        .send()
+        .await
+    {
         Ok(response) => response,
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
@@ -83,7 +93,7 @@ pub async fn dog(State(state): State<AppState>) -> Result<VoidsongImage, Voidson
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
 
-    let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
+    let image: Option<VoidsongImage> = fetch_image(&state.client, url.as_str()).await;
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
 
@@ -96,16 +106,21 @@ struct RandomFox {
 
 pub async fn fox(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
     let urls: Vec<&str> = vec!["https://randomfox.ca/floof"];
-    let client: Client = state.client;
 
     // Check if the APIs are available
-    let (success, url) = preflight_check(&client, urls).await;
+    let (success, url) = preflight_check(&state.client, urls).await;
     if !success {
         return Err(VoidsongError::ServiceUnavailable);
     }
 
     // Get the image URL
-    let get_url: Response = match client.get(url.unwrap()).headers(user_agent()).send().await {
+    let get_url: Response = match state
+        .client
+        .get(url.unwrap())
+        .headers(user_agent())
+        .send()
+        .await
+    {
         Ok(response) => response,
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
@@ -115,7 +130,7 @@ pub async fn fox(State(state): State<AppState>) -> Result<VoidsongImage, Voidson
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
 
-    let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
+    let image: Option<VoidsongImage> = fetch_image(&state.client, url.as_str()).await;
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
 
@@ -133,16 +148,21 @@ struct Media {
 
 pub async fn bunny(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
     let urls: Vec<&str> = vec!["https://api.bunnies.io/v2/loop/random/?media=gif,png"];
-    let client: Client = state.client;
 
     // Check if the APIs are available
-    let (success, url) = preflight_check(&client, urls).await;
+    let (success, url) = preflight_check(&state.client, urls).await;
     if !success {
         return Err(VoidsongError::ServiceUnavailable);
     }
 
     // Get the image URL
-    let get_url: Response = match client.get(url.unwrap()).headers(user_agent()).send().await {
+    let get_url: Response = match state
+        .client
+        .get(url.unwrap())
+        .headers(user_agent())
+        .send()
+        .await
+    {
         Ok(response) => response,
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
@@ -152,7 +172,7 @@ pub async fn bunny(State(state): State<AppState>) -> Result<VoidsongImage, Voids
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
 
-    let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
+    let image: Option<VoidsongImage> = fetch_image(&state.client, url.as_str()).await;
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
 
@@ -165,16 +185,21 @@ struct RandomDuck {
 
 pub async fn duck(State(state): State<AppState>) -> Result<VoidsongImage, VoidsongError> {
     let urls: Vec<&str> = vec!["https://random-d.uk/api/v1/random?type=png"];
-    let client: Client = state.client;
 
     // Check if the APIs are available
-    let (success, url) = preflight_check(&client, urls).await;
+    let (success, url) = preflight_check(&state.client, urls).await;
     if !success {
         return Err(VoidsongError::ServiceUnavailable);
     }
 
     // Get the image URL
-    let get_url: Response = match client.get(url.unwrap()).headers(user_agent()).send().await {
+    let get_url: Response = match state
+        .client
+        .get(url.unwrap())
+        .headers(user_agent())
+        .send()
+        .await
+    {
         Ok(response) => response,
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
@@ -184,6 +209,6 @@ pub async fn duck(State(state): State<AppState>) -> Result<VoidsongImage, Voidso
         Err(_) => return Err(VoidsongError::FailedToFetchImage),
     };
 
-    let image: Option<VoidsongImage> = fetch_image(&client, url.as_str()).await;
+    let image: Option<VoidsongImage> = fetch_image(&state.client, url.as_str()).await;
     image.ok_or(VoidsongError::FailedToFetchImage)
 }
