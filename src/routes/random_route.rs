@@ -19,6 +19,10 @@ pub fn routes() -> Router {
 
     let facts: Router = Router::new()
         .route("/cat", get(random_fact_handler::get_random_cat_fact))
+        .route(
+            "/chucknorris",
+            get(random_fact_handler::get_random_chucknorris_fact),
+        )
         .with_state(state.clone());
 
     let router: Router = Router::new().nest("/animal", animals).nest("/fact", facts);
