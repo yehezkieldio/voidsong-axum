@@ -11,6 +11,7 @@ pub fn routes() -> Router {
 
     let trivia = Router::new()
         .route("/cat", get(random_trivia_handler::cat_fact))
+        .route("/dog", get(random_trivia_handler::dog_fact))
         .with_state(state.clone());
 
     let humor = Router::new()
