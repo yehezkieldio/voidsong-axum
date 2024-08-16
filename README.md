@@ -2,9 +2,11 @@
 
 ## Voidsong
 
-Voidsong is a self-hostedable API aggregator that provides random images, trivia facts, and jokes. It acts a intermediary between multiple APIs, providing a single endpoint for all your needs, and is designed to be easily extensible. The project is written in Rust, using the [Axum](https://github.com/tokio-rs/axum) web framework.
+Voidsong is a versatile, self-hosted API aggregator designed to streamline your interaction with various APIs by providing a unified endpoint for all your content needs. Whether you're looking for random images, trivia facts, or jokes. It serves as a reliable intermediary, fetching and delivering content seamlessly from multiple external APIs.
 
-### Usage
+The project is written in Rust, using the [Axum](https://github.com/tokio-rs/axum) web framework.
+
+### Building and Running
 
 You can start the service by building the project and running the binary, with the following command:
 
@@ -21,13 +23,21 @@ SERVER_HOST=127.0.0.1
 SERVER_PORT=8080
 ```
 
-Or you can use a pre-built Docker image, available on [GitHub Container Registry](https://github.com/orgs/i9ntheory/packages/container/package/voidsong).
+### Docker
+
+You can also run the service using Docker. The image is available on GitHub Container Registry.
 
 ```bash
 docker pull ghcr.io/i9ntheory/voidsong:latest
-
-docker run -d -p 8080:8080 -e SERVER_HOST=8080 ghcr.io/i9ntheory/voidsong:latest
 ```
+
+You can run the image using the following command:
+
+```bash
+docker run --name voidsong -e SERVER_HOST=127.0.0.1 -e SERVER_PORT=9090 -p 9090:9090 ghcr.io/i9ntheory/voidsong:latest
+```
+
+If you can't connect to the service, try passing the `--network=host` flag to the `docker run` command.
 
 ### API Routes
 
