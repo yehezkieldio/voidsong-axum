@@ -21,6 +21,14 @@ SERVER_HOST=127.0.0.1
 SERVER_PORT=8080
 ```
 
+Or you can use a pre-built Docker image, available on [GitHub Container Registry](https://github.com/orgs/i9ntheory/packages/container/package/voidsong).
+
+```bash
+docker pull ghcr.io/i9ntheory/voidsong:latest
+
+docker run -d -p 8080:8080 -e SERVER_HOST=8080 ghcr.io/i9ntheory/voidsong:latest
+```
+
 ### API Routes
 
 #### Media
