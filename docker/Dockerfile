@@ -35,7 +35,7 @@ RUN chown appuser /usr/local/bin/voidsong
 USER appuser
 WORKDIR /usr/local/bin
 
-ENV SERVER_HOST=localhost
-ENV SERVER_PORT=8080
+ENV SERVER_HOST=127.0.0.1
+ENV SERVER_PORT=9090
 
 ENTRYPOINT ["voidsong"]
