@@ -14,7 +14,8 @@ pub fn routes() -> Router {
         .with_state(state.clone());
 
     let humor = Router::new()
-        .route("/chuck-norris", get(random_humor_handler::chuck_norris))
+        .route("/chucknorris", get(random_humor_handler::chuck_norris))
+        .route("/dadjoke", get(random_humor_handler::dad_joke))
         .with_state(state.clone());
 
     let media = Router::new()

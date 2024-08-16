@@ -36,3 +36,34 @@ pub async fn chuck_norris(State(state): State<AppState>) -> Result<VoidsongHumor
 
     Ok(VoidsongHumor { joke })
 }
+
+/* -------------------------------------------------------------------------- */
+
+#[derive(Deserialize)]
+struct ICanHazDadJoke {
+    joke: String,
+}
+
+pub async fn dad_joke(State(state): State<AppState>) -> Result<VoidsongHumor, VoidsongError> {
+    let urls: Vec<&str> = vec!["https://icanhazdadjoke.com"];
+    let client: Client = state.client;
+
+    // Check if the APIs are available
+    let (success, url) = preflight_check(&client, urls).await;
+    if !success {
+        return Err(VoidsongError::ServiceUnavailable);
+    }
+
+    // Get the image URL
+    let get_url: Response = match client.get(url.unwrap()).headers(user_agent()).send().await {
+        Ok(response) => response,
+        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+    };
+
+    let joke: String = match get_url.json::<ICanHazDadJoke>().await {
+        Ok(response) => response.joke,
+        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+    };
+
+    Ok(VoidsongHumor { joke })
+}
