@@ -13,9 +13,7 @@ struct CatFactNinja {
     fact: String,
 }
 
-pub async fn get_random_cat_fact(
-    State(state): State<AppState>,
-) -> Result<VoidsongFact, VoidsongError> {
+pub async fn cat_fact(State(state): State<AppState>) -> Result<VoidsongFact, VoidsongError> {
     let urls: Vec<&str> = vec!["https://catfact.ninja/fact"];
     let client: Client = state.client;
 
@@ -46,9 +44,7 @@ struct ChuckNorrisFact {
     value: String,
 }
 
-pub async fn get_random_chucknorris_fact(
-    State(state): State<AppState>,
-) -> Result<VoidsongFact, VoidsongError> {
+pub async fn chuck_norris(State(state): State<AppState>) -> Result<VoidsongFact, VoidsongError> {
     let urls: Vec<&str> = vec!["https://api.chucknorris.io/jokes/random"];
     let client: Client = state.client;
 

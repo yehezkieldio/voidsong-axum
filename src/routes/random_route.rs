@@ -18,11 +18,8 @@ pub fn routes() -> Router {
         .with_state(state.clone());
 
     let facts: Router = Router::new()
-        .route("/cat", get(random_fact_handler::get_random_cat_fact))
-        .route(
-            "/chucknorris",
-            get(random_fact_handler::get_random_chucknorris_fact),
-        )
+        .route("/cat", get(random_fact_handler::cat_fact))
+        .route("/chucknorris", get(random_fact_handler::chuck_norris))
         .with_state(state.clone());
 
     let router: Router = Router::new().nest("/animal", animals).nest("/fact", facts);
