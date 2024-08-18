@@ -31,12 +31,12 @@ pub async fn chuck_norris(State(state): State<AppState>) -> Result<VoidsongHumor
         .await
     {
         Ok(response) => response,
-        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+        Err(_) => return Err(VoidsongError::FailedToFetchContent),
     };
 
     let joke: String = match get_url.json::<ChuckNorrisFact>().await {
         Ok(response) => response.value,
-        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+        Err(_) => return Err(VoidsongError::FailedToFetchContent),
     };
 
     Ok(VoidsongHumor { joke })
@@ -67,12 +67,12 @@ pub async fn dad_joke(State(state): State<AppState>) -> Result<VoidsongHumor, Vo
         .await
     {
         Ok(response) => response,
-        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+        Err(_) => return Err(VoidsongError::FailedToFetchContent),
     };
 
     let joke: String = match get_url.json::<ICanHazDadJoke>().await {
         Ok(response) => response.joke,
-        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+        Err(_) => return Err(VoidsongError::FailedToFetchContent),
     };
 
     Ok(VoidsongHumor { joke })

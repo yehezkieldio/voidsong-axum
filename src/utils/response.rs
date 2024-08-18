@@ -11,7 +11,7 @@ use crate::env::VERSION;
 
 pub enum VoidsongError {
     FailedToFetchImage,
-    FailedToFetchFact,
+    FailedToFetchContent,
     ServiceUnavailable,
     InvalidRoute,
 }
@@ -28,9 +28,9 @@ impl IntoResponse for VoidsongError {
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "failed to fetch image data",
             ),
-            VoidsongError::FailedToFetchFact => (
+            VoidsongError::FailedToFetchContent => (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                "failed to fetch fact data",
+                "failed to fetch content data",
             ),
             VoidsongError::ServiceUnavailable => {
                 (StatusCode::SERVICE_UNAVAILABLE, "service unavailable")

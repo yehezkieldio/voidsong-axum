@@ -31,12 +31,12 @@ pub async fn fact(State(state): State<AppState>) -> Result<VoidsongTrivia, Voids
         .await
     {
         Ok(response) => response,
-        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+        Err(_) => return Err(VoidsongError::FailedToFetchContent),
     };
 
     let fact: String = match get_url.json::<NekosLifeFact>().await {
         Ok(response) => response.fact,
-        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+        Err(_) => return Err(VoidsongError::FailedToFetchContent),
     };
 
     Ok(VoidsongTrivia { fact })
@@ -67,12 +67,12 @@ pub async fn cat_fact(State(state): State<AppState>) -> Result<VoidsongTrivia, V
         .await
     {
         Ok(response) => response,
-        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+        Err(_) => return Err(VoidsongError::FailedToFetchContent),
     };
 
     let fact: String = match get_url.json::<CatFactNinja>().await {
         Ok(response) => response.fact,
-        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+        Err(_) => return Err(VoidsongError::FailedToFetchContent),
     };
 
     Ok(VoidsongTrivia { fact })
@@ -103,12 +103,12 @@ pub async fn dog_fact(State(state): State<AppState>) -> Result<VoidsongTrivia, V
         .await
     {
         Ok(response) => response,
-        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+        Err(_) => return Err(VoidsongError::FailedToFetchContent),
     };
 
     let fact: String = match get_url.json::<DogAPIKindUff>().await {
         Ok(response) => response.facts[0].clone(),
-        Err(_) => return Err(VoidsongError::FailedToFetchFact),
+        Err(_) => return Err(VoidsongError::FailedToFetchContent),
     };
 
     Ok(VoidsongTrivia { fact })

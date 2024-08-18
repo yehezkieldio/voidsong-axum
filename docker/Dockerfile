@@ -1,6 +1,8 @@
 FROM lukemathwalker/cargo-chef:latest-rust-1 AS chef
 WORKDIR /app
 
+# ---------------------------------------------------------------------------- #
+
 FROM chef AS planner
 COPY . .
 RUN cargo chef prepare
