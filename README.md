@@ -23,21 +23,13 @@ SERVER_HOST=127.0.0.1
 SERVER_PORT=8080
 ```
 
-### Docker
-
-You can also run the service using Docker. The image is available on GitHub Container Registry.
-
-```bash
-docker pull ghcr.io/i9ntheory/voidsong:latest
-```
-
 You can run the image using the following command:
 
 ```bash
 docker run --name voidsong -e SERVER_HOST=127.0.0.1 -e SERVER_PORT=9090 -p 9090:9090 ghcr.io/i9ntheory/voidsong:latest
 ```
 
-If you can't connect to the service, try passing the `--network=host` flag to the `docker run` command.
+If you can't connect to the service on Linux, try passing the `--network=host` flag to the `docker run` command.
 
 ### API Routes
 
